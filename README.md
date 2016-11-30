@@ -18,7 +18,7 @@ To install, simply add the 'setps1' file to any folder on your PATH (~/bin/ is r
 These are some more advanced options you can choose to (or not to) add
 
 1. **(RECOMMENDED)** Stop typing `source`:  
-   Simply add `alias setps1=". setps1" to your `.bash_profile` file
+   Simply add `alias setps1=". setps1"` to your `.bash_profile` file
 1. Auto-run on startup:  
    Add the following to your `.bash_profile` file:
    
