@@ -12,7 +12,7 @@ _**NOTE**: If you stop here, you will have to run either* `source setps1` or `. 
 `setps1 b` or `setps1 basic` will set the PS1 to a basic prompt which displays just the name of the parent folder.
 `setps1 v` or `setps1 verbose` will set the PS1 to a verbose output which displays the full filepath.  
 `setps1 vm` or `setps1 verbose-multiline` will set the PS1 to a verbose output which displays the full filepath, and places the prompt on the next line. Useful for very long working directories.  
-`setps1 f` or `setps1 fancy` will enable a fancy prompt which utilizes [powerline](http://powerline.readthedocs.io). If powerline is not installed, this defaults to the `verbose` prompt.
+`setps1 f` or `setps1 fancy` will enable a fancy prompt which utilizes [powerline](http://powerline.readthedocs.io). If powerline is not installed, this defaults to the `verbose` prompt. **NOTE**: if using powerline on linux, or if it's just not working, read item #4 in the [Advanced](#advanced-setup) section.
 
 ## Advanced Setup
 These are some more advanced options you can choose to (or not to) add
