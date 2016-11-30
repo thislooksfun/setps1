@@ -33,5 +33,5 @@ These are some more advanced options you can choose to (or not to) add
 1. Autocompletion:  
    1. Make sure you have bash autocompletion installed/enabled (on macOS you might have to run `brew install bash-completion`)
    2. Add the `completions/setps1` file to the bash completions folder. (With brew bash-completion, it's located at `$(brew --prefix)/etc/bash_completion.d/`)
-1. Set powerline install location:
+1. Set powerline install location:  
    If your powerline install is somewhere other than `~/Library/Python/2.7/lib/python/site-packages/powerline/bindings/bash/powerline.sh`, you will need to set the `POWERLINE_SHELL` variable before calling `setps1`. This can be done by adding the line `export POWERLINE_SHELL="[path to powerline.sh]"` in your `.bash_profile`. You only need to place it before trying to call `setps1 fancy`.
