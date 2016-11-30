@@ -9,7 +9,7 @@ To install, simply add the 'setps1' file to any folder on your PATH (~/bin/ is r
 ## Commands
 `setps1 --help` or `setps1 -h` (or mis-typing any other parameter) will display the help.  
 `setps1 d` or `setps1 default` will set the PS1 back to whatever it was before `setps1` was run the first time in the current session.  
-`setps1 b` or `setps1 basic` will set the PS1 to a basic prompt which displays just the name of the parent folder.
+`setps1 b` or `setps1 basic` will set the PS1 to a basic prompt which displays just the name of the parent folder.  
 `setps1 v` or `setps1 verbose` will set the PS1 to a verbose output which displays the full filepath.  
 `setps1 vm` or `setps1 verbose-multiline` will set the PS1 to a verbose output which displays the full filepath, and places the prompt on the next line. Useful for very long working directories.  
 `setps1 f` or `setps1 fancy` will enable a fancy prompt which utilizes [powerline](http://powerline.readthedocs.io). If powerline is not installed, this defaults to the `verbose` prompt. **NOTE**: if using powerline on linux, or if it's just not working, read item #4 in the [Advanced](#advanced-setup) section.
