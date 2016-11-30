@@ -1,0 +1,5 @@
+_setps1() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  COMPREPLY=( $(compgen -W "system basic verbose verbose-multiline fancy" -- $cur) )
+}
+complete -F _setps1 setps1
