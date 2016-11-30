@@ -1,5 +1,140 @@
-_setps1() {
-  local cur=${COMP_WORDS[COMP_CWORD]}
-  COMPREPLY=( $(compgen -W "system basic verbose verbose-multiline fancy" -- $cur) )
-}
-complete -F _setps1 setps1
+###
+#
+#
+#
+###
+
+
+#   \a : an ASCII bell character (07) -- plays the bell sound
+#   \d : the date in "Weekday Month Date" format (e.g., "Tue May 26")
+#   \D{format} : the format is passed to strftime(3) and the result is inserted into the prompt string; an empty format results in a locale-specific time representation. The braces are required
+#   \e : an ASCII escape character (033)
+#   \h : the hostname up to the first '.'
+#   \H : the hostname
+#   \j : the number of jobs currently managed by the shell
+#   \l : the basename of the shell’s terminal device name
+#   \n : newline
+#   \r : carriage return
+#   \s : the name of the shell, the basename of $0 (the portion following the final slash)
+#   \t : the current time in 24-hour HH:MM:SS format
+#   \T : the current time in 12-hour HH:MM:SS format
+#   \@ : the current time in 12-hour am/pm format
+#   \A : the current time in 24-hour HH:MM format
+#   \u : the username of the current user
+#   \v : the version of bash (e.g., 2.00)
+#   \V : the release of bash, version + patch level (e.g., 2.00.0)
+#   \w : the current working directory, with $HOME abbreviated with a tilde
+#   \W : the basename of the current working directory, with $HOME abbreviated with a tilde
+#   \! : the history number of this command
+#   \# : the command number of this command
+#   \$ : if the effective UID is 0, a #, otherwise a $
+#   \nnn : the character corresponding to the octal number nnn
+#   \\ : a backslash
+#   \[ : begin a sequence of non-printing characters, which could be used to embed a terminal control sequence into the prompt
+#   \] : end a sequence of non-printing characters
+
+########################
+# VARIABLE DEFINITIONS #
+########################
+
+## PS1 presets
+DEFAULT="\h:\W \u\$ "
+BASIC="\W => "
+VERBOSE="\w => "
+VERBOSE_MULTILINE="\w\n=> "
+
+## Flags
+NEEDS_HELP=false;
+IS_SHELL_START=false;
+
+## Other variables
+TLF_POWERLINE_SCRIPT="$HOME/Library/Python/2.7/lib/python/site-packages/powerline/bindings/bash/powerline.sh"
+
+
+#############
+# MAIN BODY #
+#############
+
+## setps1 is being called for the first time, time to do some setup!
+if [ -z "$TLF_SETPS1_INITALIZED" ] || ( ! $TLF_SETPS1_INITALIZED ); then
+  export TLF_SETPS1_DEFAULT="$PS1"
+  export TLF_SETPS1_INITALIZED=true
+fi
+
+## If there is a stored default PS1, use that instead of the provided one
+if ! [ -z "$TLF_SETPS1_DEFAULT" ]; then
+  DEFAULT="$TLF_SETPS1_DEFAULT"
+fi
+
+## If there is already a defined 'POWERLINE_SHELL_FILE' variable, use that path instead of the provided one
+if ! [ -z "$POWERLINE_SHELL" ]; then
+  TLF_POWERLINE_SCRIPT="$POWERLINE_SHELL"
+fi
+
+## Process the command
+if [ $# -gt 0 ]; then
+  if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
+    # If a help flag was passed, show the help
+    NEEDS_HELP=true;
+  elif [ "$1" == "fancy" ] || [ "$1" == "f" ]; then
+    # Attempt to set fancy mode using powerline
+    if [ -f "$TLF_POWERLINE_SCRIPT" ]; then
+      # Powerline is installed, let's load it up!
+      source "$TLF_POWERLINE_SCRIPT"
+      echo -n "Fancy mode selected"
+    else
+      # Poserline is not installed, just use verbose mode
+      echo -n "Fancy mode not available, defaulting to verbose mode"
+      echo -n "$TLF_POWERLINE_SCRIPT"
+      setps1 verbose
+    fi
+  else
+    # Not using powerline, clear the PROMPT_COMMAND variable
+    export PROMPT_COMMAND=""
+    
+    if [ "$1" == "default" ] || [ "$1" == "d" ]; then
+      # Use the default prompt -- this is whatever the PS1 was set to before setps1 was run the first time this session
+      echo -n "Default mode selected"
+      export PS1="$DEFAULT"
+    elif [ "$1" == "basic" ] || [ "$1" == "b" ]; then
+      # Use the basic prompt
+      echo -n "Basic mode selected"
+      export PS1="$BASIC"
+    elif [ "$1" == "verbose" ] || [ "$1" == "v" ]; then
+      # Use the verbose prompt
+      echo -n "Verbose mode selected"
+      export PS1="$VERBOSE"
+    elif [ "$1" == "verbose-multiline" ] || [ "$1" == "vm" ]; then
+      # Use the multiline varient of the verbose prompt
+      echo -n "Verbose-multiline mode selected"
+      export PS1="$VERBOSE_MULTILINE"
+    else
+      # None of the other commands matched, show the help!
+      NEEDS_HELP=true
+    fi
+  fi
+else
+  # None of the other commands matched, show the help!
+  NEEDS_HELP=true
+fi
+
+if $NEEDS_HELP; then
+  # The user has either requested help, or has mangled the command. Either way, they need some assistance
+  echo "Usage:"
+  echo "  setps1 --help               Display this help message"
+  echo "  setps1 -h                   Short form of --help"
+  echo "  setps1 [mode]"
+  echo "    Available modes:"
+  echo "      d   default             The default PS1   ($DEFAULT)"
+  echo "      b   basic               A basic prompt showing just the name of the current directory and a prompt   ($BASIC)"
+  echo "      v   verbose             A verbose prompt showing the full path of the current directory and a prompt   ($VERBOSE)"
+  echo "      vm  verbose-multiline   The verbose prompt, but with the arrow on a new line   ($VERBOSE_MULTILINE)"
+  echo "      f   fancy               A fancy prompt utilizing the 'powerline' command -- defaults to 'verbose' if powerline isn't installed"
+elif [ $# -eq 2 ] && [ "$2" == "-tlf-set-ps1-shell-start-flag" ]; then
+  # The shell has just been started -- this flag should only be passed from the .bash_profile, .bashrc, or equivalent startup script
+  # Show a quick message to remind the user how to change the prompt
+  echo " (type 'setps1 -h' for a list of options)"
+else
+  # Print a newline to finish off the message
+  echo ""
+fi
