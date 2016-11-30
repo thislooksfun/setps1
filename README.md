@@ -4,7 +4,7 @@ An easy, native way to set the bash PS1 on the fly
 
 ## Setup
 To install, simply add the 'setps1' file to any folder on your PATH (~/bin/ is recommended).   
-**WARNING: If you stop here, you will have to run either* `source setps1` or `. setps1` (both are identical) every time. See item #1 in the [Advanced](#advanced-setup) section.**
+**WARNING: If you stop here, you will have to run either `source setps1` or `. setps1` (both are identical) every time. See item #1 in the [Advanced](#advanced-setup) section.**
 
 ## Commands
 `setps1 --help` or `setps1 -h` (or mis-typing any other parameter) will display the help.  
