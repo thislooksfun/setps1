@@ -1,6 +1,6 @@
 #########################################################################
 ## setps1  --  the simple way to change your PS1 on the fly
-## Copyright (C) 2016  thislooksfun
+## Copyright (C) 2017  thislooksfun
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -54,6 +54,8 @@ DEFAULT="\h:\W \u\$ "
 BASIC="\W => "
 VERBOSE="\w => "
 VERBOSE_MULTILINE="\w\n=> "
+#Requires git prompt (https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh)
+GIT="\[\e]0;\w\a]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\[\033[36m\]`__git_ps1`\[\033[0m\]\n => "
 
 ## Flags
 NEEDS_HELP=false;
@@ -120,6 +122,9 @@ if [ $# -gt 0 ]; then
       # Use the multiline varient of the verbose prompt
       echo -n "Verbose-multiline mode selected"
       export PS1="$VERBOSE_MULTILINE"
+    elif [ "$1" == "git" ] || [ "$1" == "g" ]; then
+      echo -n "Git mode selected"
+      export PS1="$GIT"
     else
       # None of the other commands matched, show the help!
       NEEDS_HELP=true
@@ -142,6 +147,7 @@ if $NEEDS_HELP; then
   echo "      v   verbose             A verbose prompt showing the full path of the current directory and a prompt   ($VERBOSE)"
   echo "      vm  verbose-multiline   The verbose prompt, but with the arrow on a new line   ($VERBOSE_MULTILINE)"
   echo "      f   fancy               A fancy prompt utilizing the 'powerline' command -- defaults to 'verbose' if powerline isn't installed"
+  echo "      g   git                 A non-powerline way of showing git information"
 elif [ $# -eq 2 ] && [ "$2" == "-tlf-set-ps1-shell-start-flag" ]; then
   # The shell has just been started -- this flag should only be passed from the .bash_profile, .bashrc, or equivalent startup script
   # Show a quick message to remind the user how to change the prompt
