@@ -54,8 +54,16 @@ DEFAULT="\h:\W \u\$ "
 BASIC="\W => "
 VERBOSE="\w => "
 VERBOSE_MULTILINE="\w\n=> "
-#Requires git prompt (https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh)
-GIT="\[\e]0;\w\a]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\[\033[36m\]`__git_ps1`\[\033[0m\]\n => "
+
+# Requires git prompt (https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh)
+# Must be installed at ~/bin/.git-prompt.sh
+if [ -f ~/bin/.git-prompt.sh ]; then
+  if [ ! -z "__git_ps1" ]; then
+    source ~/bin/.git-prompt.sh
+  fi
+  GIT='\w\[\e[36m\]$(__git_ps1)\[\e[0m\] => '
+fi
+
 
 ## Flags
 NEEDS_HELP=false;
@@ -80,7 +88,7 @@ if ! [ -z "$TLF_SETPS1_DEFAULT" ]; then
   DEFAULT="$TLF_SETPS1_DEFAULT"
 fi
 
-## If there is already a defined 'POWERLINE_SHELL_FILE' variable, use that path instead of the provided one
+## If there is already a defined 'POWERLINE_SHELL' variable, use that path instead of the provided one
 if ! [ -z "$POWERLINE_SHELL" ]; then
   TLF_POWERLINE_SCRIPT="$POWERLINE_SHELL"
 fi
@@ -123,8 +131,13 @@ if [ $# -gt 0 ]; then
       echo -n "Verbose-multiline mode selected"
       export PS1="$VERBOSE_MULTILINE"
     elif [ "$1" == "git" ] || [ "$1" == "g" ]; then
-      echo -n "Git mode selected"
-      export PS1="$GIT"
+      if [ -z "$GIT" ]; then
+        # The git prompt isn't defined, abort and show help
+        NEEDS_HELP=true
+      else
+        echo -n "Git mode selected"
+        export PS1="$GIT"
+      fi
     else
       # None of the other commands matched, show the help!
       NEEDS_HELP=true
@@ -147,7 +160,9 @@ if $NEEDS_HELP; then
   echo "      v   verbose             A verbose prompt showing the full path of the current directory and a prompt   ($VERBOSE)"
   echo "      vm  verbose-multiline   The verbose prompt, but with the arrow on a new line   ($VERBOSE_MULTILINE)"
   echo "      f   fancy               A fancy prompt utilizing the 'powerline' command -- defaults to 'verbose' if powerline isn't installed"
-  echo "      g   git                 A non-powerline way of showing git information"
+  if [ ! -z "$GIT" ]; then
+    echo "      g   git                 A non-powerline way of showing git information"
+  fi
 elif [ $# -eq 2 ] && [ "$2" == "-tlf-set-ps1-shell-start-flag" ]; then
   # The shell has just been started -- this flag should only be passed from the .bash_profile, .bashrc, or equivalent startup script
   # Show a quick message to remind the user how to change the prompt
